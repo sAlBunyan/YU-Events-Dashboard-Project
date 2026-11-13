@@ -439,27 +439,27 @@ dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
 const BUDGET = 150000; // semester budget in SAR
 const CATEGORIES = ["Orientation", "Career", "Technical", "Academic", "Social"];
 
-// ---------- Event data (add or edit events here) ----------
+// ---------- Event data ----------
 const events = [
-  { name: "Welcome Day",             category: "Orientation", month: "Sep", capacity: 500, registered: 480, attended: 430, cost: 12000 },
-  { name: "Career Fair",             category: "Career",      month: "Oct", capacity: 400, registered: 390, attended: 360, cost: 18000 },
-  { name: "Hackathon",               category: "Technical",   month: "Oct", capacity: 120, registered: 110, attended: 95,  cost: 9000 },
-  { name: "Business Talk",           category: "Academic",    month: "Oct", capacity: 200, registered: 150, attended: 105, cost: 4000 },
-  { name: "Sports Day",              category: "Social",      month: "Nov", capacity: 300, registered: 280, attended: 240, cost: 7500 },
-  { name: "Research Forum",          category: "Academic",    month: "Nov", capacity: 150, registered: 90,  attended: 60,  cost: 5000 },
-  { name: "Cyber Security Workshop", category: "Technical",   month: "Nov", capacity: 80,  registered: 80,  attended: 72,  cost: 3500 },
-  { name: "National Day Event",      category: "Social",      month: "Sep", capacity: 600, registered: 560, attended: 520, cost: 15000 },
-  { name: "CV Clinic",               category: "Career",      month: "Dec", capacity: 100, registered: 85,  attended: 70,  cost: 2000 },
-  { name: "Graduation Prep Talk",    category: "Orientation", month: "Dec", capacity: 250, registered: 140, attended: 95,  cost: 3000 },
-  { name: "Freshers Mixer",          category: "Social",      month: "Sep", capacity: 200, registered: 190, attended: 170, cost: 5000 },
-  { name: "Study Skills Workshop",   category: "Academic",    month: "Sep", capacity: 100, registered: 70,  attended: 50,  cost: 1500 },
-  { name: "AI Bootcamp",             category: "Technical",   month: "Sep", capacity: 100, registered: 100, attended: 88,  cost: 6000 },
-  { name: "Internship Info Session", category: "Career",      month: "Sep", capacity: 150, registered: 130, attended: 105, cost: 2500 },
-  { name: "Library Orientation",     category: "Orientation", month: "Oct", capacity: 150, registered: 90,  attended: 62,  cost: 1000 },
-  { name: "Alumni Networking Night", category: "Career",      month: "Nov", capacity: 120, registered: 100, attended: 85,  cost: 6500 },
-  { name: "Cultural Festival",       category: "Social",      month: "Dec", capacity: 500, registered: 450, attended: 390, cost: 14000 },
-  { name: "Exam Prep Seminar",       category: "Academic",    month: "Dec", capacity: 200, registered: 160, attended: 120, cost: 2500 },
-  { name: "Data Analytics Workshop", category: "Technical",   month: "Dec", capacity: 90,  registered: 85,  attended: 76,  cost: 3000 }
+  { name: "Welcome Day",             category: "Orientation", month: "September", capacity: 500, registered: 480, attended: 430, cost: 12000 },
+  { name: "Career Fair",             category: "Career",      month: "March",     capacity: 400, registered: 390, attended: 360, cost: 18000 },
+  { name: "Hackathon",               category: "Technical",   month: "November",  capacity: 120, registered: 110, attended: 95,  cost: 9000 },
+  { name: "Business Talk",           category: "Academic",    month: "January",   capacity: 200, registered: 150, attended: 105, cost: 4000 },
+  { name: "Sports Day",              category: "Social",      month: "April",     capacity: 300, registered: 280, attended: 240, cost: 7500 },
+  { name: "Research Forum",          category: "Academic",    month: "July",      capacity: 150, registered: 90,  attended: 60,  cost: 5000 },
+  { name: "Cyber Security Workshop", category: "Technical",   month: "February",  capacity: 80,  registered: 80,  attended: 72,  cost: 3500 },
+  { name: "National Day Event",      category: "Social",      month: "December",  capacity: 600, registered: 560, attended: 520, cost: 15000 },
+  { name: "CV Clinic",               category: "Career",      month: "June",      capacity: 100, registered: 85,  attended: 70,  cost: 2000 },
+  { name: "Graduation Prep Talk",    category: "Orientation", month: "May",       capacity: 250, registered: 140, attended: 95,  cost: 3000 },
+  { name: "Freshers Mixer",          category: "Social",      month: "October",   capacity: 200, registered: 190, attended: 170, cost: 5000 },
+  { name: "Study Skills Workshop",   category: "Academic",    month: "August",    capacity: 100, registered: 70,  attended: 50,  cost: 1500 },
+  { name: "AI Bootcamp",             category: "Technical",   month: "March",     capacity: 100, registered: 100, attended: 88,  cost: 6000 },
+  { name: "Internship Info Session", category: "Career",      month: "January",   capacity: 150, registered: 130, attended: 105, cost: 2500 },
+  { name: "Library Orientation",     category: "Orientation", month: "September", capacity: 150, registered: 90,  attended: 62,  cost: 1000 },
+  { name: "Alumni Networking Night", category: "Career",      month: "June",      capacity: 120, registered: 100, attended: 85,  cost: 6500 },
+  { name: "Cultural Festival",       category: "Social",      month: "April",     capacity: 500, registered: 450, attended: 390, cost: 14000 },
+  { name: "Exam Prep Seminar",       category: "Academic",    month: "May",       capacity: 200, registered: 160, attended: 120, cost: 2500 },
+  { name: "Data Analytics Workshop", category: "Technical",   month: "November",  capacity: 90,  registered: 85,  attended: 76,  cost: 3000 },
 ];
 
 // ---------- Small helpers ----------

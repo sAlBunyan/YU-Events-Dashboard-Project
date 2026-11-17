@@ -276,8 +276,19 @@ th {
   margin-top: 4px;
   background: var(--line);
   border-radius: 4px;
-  overflow: hidden;
+  position: relative;
 }
+
+.target-line {
+  position: absolute;
+  left: 85%;
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  background: var(--ink);
+}
+
+.chart-note { margin: 0 0 8px; font-size: 0.75rem; color: var(--muted); }
 
 .fill { height: 100%; }
 
@@ -324,6 +335,13 @@ dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
 @media (max-width: 480px) {
   .form-grid { grid-template-columns: 1fr; }
 }
+
+.purpose { margin: 2px 0 0; font-size: 0.85rem; color: var(--muted); }
+
+tr.low td { color: var(--bad); font-weight: 600; }
+
+.sim-note { margin: 2px 0 0; font-size: 0.7rem; color: var(--muted); }
+
 </style>
 </head>
 
@@ -334,7 +352,12 @@ dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
     <div class="brand">
       <img id="logo" class="logo" alt="Al Yamamah University logo" hidden>
       <div id="logo-fallback" class="badge">YU</div>
-      <h1>YU Events Dashboard</h1>
+      <div>
+  <h1>YU Events Dashboard</h1>
+  <p class="purpose">Helps Student Affairs decide which events to keep, fix or drop.</p>
+  <p class="sim-note">Simulated data – academic prototype</p>
+</div>
+
     </div>
 
     <div class="controls">
@@ -343,7 +366,7 @@ dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
       </label>
       <label class="field">Month
         <select id="month-filter">
-          <option value="All">Whole semester</option>
+          <option value="All">Whole Year</option>
           <option>January</option>
           <option>February</option>
           <option>March</option>
@@ -386,6 +409,7 @@ dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
               <th>Registered</th>
               <th>Attended</th>
               <th>Cost (SAR)</th>
+              <th>Cost / attendee (SAR)</th>
             </tr>
           </thead>
           <tbody id="events-body"></tbody>
@@ -396,6 +420,7 @@ dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
     <div class="side">
       <div class="card">
         <h2>Attendance rate by category</h2>
+        <p class="chart-note">Vertical line = 85% target</p>
         <div id="category-bars"></div>
       </div>
       <div class="card">
@@ -407,6 +432,15 @@ dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
 
   <div id="insight" class="insight"></div>
 
+  <div class="insight">
+  <b>Recommendations</b>
+  <ul>
+    <li>Send reminders 24h before + reschedule low show-up talks</li>
+    <li>Redesign Research Forum (67%, SAR 83/attendee)</li>
+    <li>Seek sponsors for Technical events (SAR 65/attendee)</li>
+  </ul>
+</div>
+
 </div>
 
 <dialog id="dialog">
@@ -416,10 +450,18 @@ dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
     <label>Category <select id="new-category"></select></label>
     <label>Month
       <select id="new-month">
-        <option>Sep</option>
-        <option>Oct</option>
-        <option>Nov</option>
-        <option>Dec</option>
+        <option>January</option>
+        <option>February</option>
+        <option>March</option>
+        <option>April</option>
+        <option>May</option>
+        <option>June</option>
+        <option>July</option>
+        <option>August</option>
+        <option>September</option>
+        <option>October</option>
+        <option>November</option>
+        <option>December</option>
       </select>
     </label>
     <label>Capacity <input id="new-capacity" type="number" min="1"></label>
@@ -436,7 +478,7 @@ dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
 
 <script>
 // ---------- Settings ----------
-const BUDGET = 150000; // semester budget in SAR
+const BUDGET = 150000; // yearly budget in SAR
 const CATEGORIES = ["Orientation", "Career", "Technical", "Academic", "Social"];
 
 // ---------- Event data ----------
@@ -517,8 +559,8 @@ function renderKpis(stats) {
   const cards = [
     { label: "Events held", value: stats.count, note: "in selection", status: "" },
     { label: "Total attendance", value: formatNumber(stats.attended), note: stats.capacityFilled.toFixed(0) + "% of capacity", status: stats.capacityFilled >= 70 ? "up" : "down" },
-    { label: "Show-up rate", value: stats.showUpRate.toFixed(0) + "%", note: "target 85%", status: stats.showUpRate >= 85 ? "up" : "down" },
-    { label: "Cost per attendee", value: formatNumber(stats.costPerAttendee) + " SAR", note: "total " + formatNumber(stats.cost) + " SAR", status: "" }
+    { label: "Show-up rate", value: stats.showUpRate.toFixed(0) + "%", note: "Target ≥ 85%", status: stats.showUpRate >= 85 ? "up" : "down" },
+    { label: "Cost per attendee", value: formatNumber(stats.costPerAttendee) + " SAR", note: "Target ≤ SAR 40", status: stats.costPerAttendee <= 40 ? "up" : "down" }
   ];
 
   $("kpis").innerHTML = cards.map(card =>
@@ -580,14 +622,13 @@ function renderCategoryBars() {
         '<span class="bar-name"><span class="dot" style="background:' + categoryColor(category) + '"></span>' + category + "</span>" +
         "<strong>" + rate.toFixed(0) + "%</strong>" +
       "</div>" +
-      '<div class="track"><div class="fill" style="width:' + rate + "%; background:" + categoryColor(category) + '"></div></div>' +
-    "</div>";
+      '<div class="track"><div class="fill" style="width:' + rate + "%; background:" + categoryColor(category) + '"></div><div class="target-line"></div></div>' +    "</div>";
   }).join("");
 }
 
 function renderTable(list) {
   if (list.length === 0) {
-    $("events-body").innerHTML = '<tr><td colspan="6">No events match. Change the filters.</td></tr>';
+    $("events-body").innerHTML = '<tr><td colspan="7">No events match. Change the filters.</td></tr>';
     return;
   }
 
@@ -596,14 +637,17 @@ function renderTable(list) {
     const tag = '<span class="tag" style="background: color-mix(in srgb, ' + color + ' 15%, transparent); border-color: ' + color + '">' +
                 '<span class="dot" style="background:' + color + '"></span>' + event.category + "</span>";
 
-    return "<tr>" +
+    const low = event.attended / event.registered < 0.75;
+
+    return '<tr class="' + (low ? "low" : "") + '">' +
       "<td>" + escapeHtml(event.name) + "</td>" +
       "<td>" + tag + "</td>" +
       "<td>" + event.month + "</td>" +
       "<td>" + event.registered + "</td>" +
       "<td>" + event.attended + "</td>" +
       "<td>" + formatNumber(event.cost) + "</td>" +
-    "</tr>";
+      "<td>" + formatNumber(event.attended ? event.cost / event.attended : 0) + "</td>" +   
+      "</tr>";
   }).join("");
 }
 
@@ -611,8 +655,7 @@ function renderInsight(list) {
   const lowEvents = list.filter(event => event.attended / event.registered < 0.75).map(event => escapeHtml(event.name));
 
   if (lowEvents.length > 0) {
-    $("insight").innerHTML = "<b>Insight:</b> Low show-up (under 75%): " + lowEvents.join(", ") +
-                             ". Recommendation: send reminders and move these events to peak months.";
+    $("insight").innerHTML = "<b>Insight:</b> Low show-up (under 75%): " + lowEvents.join(", ") + ".";
   } else {
     $("insight").innerHTML = "<b>Insight:</b> No event is below the 75% show-up threshold in this selection. Keep the current schedule.";
   }
